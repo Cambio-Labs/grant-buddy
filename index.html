@@ -319,12 +319,17 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     b:{quote:"Studio Hours ran 312 workshops in 2025.",title:"2025 Program Outcomes Summary",loc:"p. 2, “Studio Hours”",conf:"MEDIUM",why:"Self-reported by program staff, no outside evaluation. Cited with a caveat."}
   };
   var box=document.getElementById("src"), chips=document.querySelectorAll(".chip");
+  // Fire a Plausible custom event if the script is loaded; no-op otherwise.
+  function track(event, props){
+    if(window.plausible) window.plausible(event, props?{props:props}:{});
+  }
   function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
   chips.forEach(function(c){
     c.addEventListener("click",function(){
       var s=sources[c.dataset.id];
       chips.forEach(function(x){x.setAttribute("aria-pressed",x===c?"true":"false")});
       box.innerHTML='<blockquote>“'+esc(s.quote)+'”</blockquote><dl><dt>Document</dt><dd>'+esc(s.title)+'</dd><dt>Location</dt><dd>'+esc(s.loc)+'</dd><dt>Confidence</dt><dd>'+esc(s.conf)+'</dd><dt>Why</dt><dd>'+esc(s.why)+'</dd></dl>';
+      track("demo_source_click", {source: s.title, confidence: s.conf});
     });
   });
   // Install tabs
@@ -336,6 +341,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       x.tabIndex=on?0:-1;
       document.getElementById(x.getAttribute("aria-controls")).hidden=!on;
     });
+    track("tab_switch", {tab: t.textContent.trim()});
   }
   tabs.forEach(function(t,i){
     t.addEventListener("click",function(){show(t)});
