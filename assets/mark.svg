@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <polygon points="500.0,130.0 179.6,315.0 179.6,685.0 500.0,870.0 820.4,685.0 820.4,315.0" fill="#46186F" stroke="#46186F" stroke-width="70" stroke-linejoin="round"/>
+  <g stroke="#B48CE6" stroke-width="22" stroke-linecap="round"><line x1="500" y1="500" x2="500.0" y2="200.0"/><line x1="500" y1="500" x2="240.2" y2="350.0"/><line x1="500" y1="500" x2="240.2" y2="650.0"/><line x1="500" y1="500" x2="500.0" y2="800.0"/><line x1="500" y1="500" x2="759.8" y2="650.0"/><line x1="500" y1="500" x2="759.8" y2="350.0"/></g>
+  <g fill="#B48CE6"><circle cx="500.0" cy="200.0" r="44"/><circle cx="240.2" cy="350.0" r="44"/><circle cx="240.2" cy="650.0" r="44"/><circle cx="500.0" cy="800.0" r="44"/><circle cx="759.8" cy="650.0" r="44"/><circle cx="759.8" cy="350.0" r="44"/></g>
+  <path d="M372,342 H554 L628,416 V658 H372 Z" fill="#F3EDFF" stroke="#2C0E4C" stroke-width="30" stroke-linejoin="round"/>
+  <path d="M554,342 V416 H628 Z" fill="#B48CE6" stroke="#2C0E4C" stroke-width="22" stroke-linejoin="round"/>
+  <g stroke="#B48CE6" stroke-width="20" stroke-linecap="round">
+    <line x1="420" y1="400" x2="510" y2="400"/>
+    <line x1="420" y1="442" x2="580" y2="442"/>
+  </g>
+  <g fill="#2C0E4C"><circle cx="452" cy="520" r="19"/><circle cx="548" cy="520" r="19"/></g>
+  <path d="M446,572 Q500,624 554,572" fill="none" stroke="#2C0E4C" stroke-width="18" stroke-linecap="round"/>
+  <g fill="#8CC8EB"><circle cx="418" cy="566" r="13"/><circle cx="582" cy="566" r="13"/></g>
+</svg>

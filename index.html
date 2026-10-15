@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cambio Grant Buddy</title>
+<meta name="description" content="Cited grant drafts from your own documents. Every factual claim maps to a source in your organization's files, and unsupported claims appear as explicit gaps. Open source, for Claude and Codex.">
+<link rel="icon" type="image/svg+xml" href="assets/mark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2C0E4C; --purple:#46186F; --purple-deep:#2C0E4C; --lavender:#B48CE6; --paper:#F3EDFF; --sky:#8CC8EB;
+  --bg:#ffffff; --bg-alt:#F3EDFF; --text:#2a2433; --muted:#5f5670; --line:#e3d8f5;
+  --card:#ffffff; --accent:#46186F; --accent-ink:#2C0E4C; --on-accent:#F3EDFF; --gap-bg:#fff4e0; --gap-line:#e6b45a; --gap-text:#5a3a00;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#12071f; --bg-alt:#1d0f2e; --text:#f0e9fb; --muted:#b5a8cc; --line:#352350;
+    --card:#221337; --accent:#B48CE6; --accent-ink:#f0e9fb; --on-accent:#2C0E4C; --gap-bg:#3a2a0e; --gap-line:#b8893a; --gap-text:#f5dfb0; --ink:#0d041a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12071f; --bg-alt:#1d0f2e; --text:#f0e9fb; --muted:#b5a8cc; --line:#352350;
+  --card:#221337; --accent:#B48CE6; --accent-ink:#f0e9fb; --on-accent:#2C0E4C; --gap-bg:#3a2a0e; --gap-line:#b8893a; --gap-text:#f5dfb0; --ink:#0d041a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:400 17px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;color:var(--accent-ink);line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2.2rem,5.5vw,3.6rem);font-weight:700}
+h2{font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:600}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0 0 1em}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+section{padding:72px 0}
+.alt{background:var(--bg-alt)}
+.lead{font-size:1.15rem;color:var(--muted);max-width:640px}
+header{padding:20px 0;border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{display:block;width:52px;height:52px}
+.brand-text{display:flex;flex-direction:column;line-height:1.05}
+.brand .by{font:500 .68rem Poppins,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--lavender)}
+.brand .nm{font:700 1.5rem Poppins,sans-serif;color:var(--accent-ink)}
+nav{display:flex;gap:20px;align-items:center;font-size:.95rem}
+nav a{text-decoration:none;color:var(--muted)}
+nav a:hover{color:var(--accent)}
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;text-decoration:none;font-family:Poppins,sans-serif;font-size:.98rem;border:2px solid var(--accent);transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.ghost{color:var(--accent);background:transparent}
+.hero{padding:80px 0 64px}
+.hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
+.hero .eyebrow{font:600 .8rem Poppins,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--lavender);margin-bottom:12px}
+.hero svg{width:100%;max-width:340px;justify-self:center}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+.pill{font-size:.85rem;padding:4px 12px;border-radius:99px;border:1px solid var(--line);color:var(--muted);background:var(--card)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px}
+.card p{color:var(--muted);margin:0}
+.num{font:700 .85rem Poppins,sans-serif;color:var(--lavender);letter-spacing:.1em;margin-bottom:8px}
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:32px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 14px;position:relative}
+.step b{display:block;font-family:Poppins,sans-serif;color:var(--accent);font-size:.95rem}
+.step span{font-size:.85rem;color:var(--muted);line-height:1.4;display:block;margin-top:4px}
+.step.gate{border-color:var(--lavender);border-width:2px}
+.step span.gatetag{display:inline-block;margin:0;line-height:1.3;position:absolute;top:-12px;right:10px;background:var(--lavender);color:#2C0E4C;font:700 .66rem Poppins,sans-serif;letter-spacing:.04em;padding:3px 9px;border-radius:99px;border:2px solid var(--bg-alt)}
+/* demo */
+.demo{display:grid;grid-template-columns:1.3fr .9fr;gap:24px;margin-top:32px;align-items:start}
+.doc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 26px}
+.doc .q{font:600 .75rem Poppins,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--lavender);margin:0 0 6px}
+.doc p.a{margin:0 0 20px}
+.chip{display:inline-block;font:500 .74rem Inter,sans-serif;border:1px solid var(--lavender);color:var(--accent-ink);background:transparent;border-radius:99px;padding:1px 9px;margin-left:4px;cursor:pointer;vertical-align:1px}
+.chip:hover,.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.gap{background:var(--gap-bg);border-left:4px solid var(--gap-line);border-radius:8px;padding:12px 14px;color:var(--gap-text);font-size:.95rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;position:sticky;top:16px}
+.panel h3{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lavender)}
+.panel blockquote{margin:0 0 12px;padding-left:14px;border-left:3px solid var(--lavender);font-size:1.02rem}
+.panel dl{margin:0;font-size:.88rem;color:var(--muted)}
+.panel dt{float:left;clear:left;width:92px;font-weight:600;color:var(--text)}
+.panel dd{margin:0 0 4px 92px}
+.note{font-size:.85rem;color:var(--muted);margin-top:12px}
+/* lists */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px}
+ul.tick,ul.cross{list-style:none;padding:0;margin:0}
+ul.tick li,ul.cross li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--line)}
+ul.tick li:last-child,ul.cross li:last-child{border:0}
+ul.tick li::before{content:"";position:absolute;left:4px;top:15px;width:9px;height:5px;border-left:2.5px solid var(--accent);border-bottom:2.5px solid var(--accent);transform:rotate(-45deg)}
+ul.cross li::before,ul.cross li::after{content:"";position:absolute;left:3px;top:19px;width:14px;height:2.5px;background:var(--muted);transform:rotate(45deg)}
+ul.cross li::after{transform:rotate(-45deg)}
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+.rung{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--card)}
+.rung .n{width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 .9rem Poppins;display:grid;place-items:center;margin-bottom:10px}
+/* install */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:28px}
+.tab{font:600 .9rem Poppins,sans-serif;padding:9px 16px;border-radius:9px 9px 0 0;border:1px solid var(--line);border-bottom:0;background:transparent;color:var(--muted);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--card);color:var(--accent-ink);border-color:var(--lavender)}
+.tabpanel{background:var(--card);border:1px solid var(--lavender);border-radius:0 12px 12px 12px;padding:22px}
+.tabpanel[hidden]{display:none}
+pre{background:var(--ink);color:#F3EDFF;border-radius:10px;padding:14px 16px;overflow-x:auto;font:500 .88rem/1.6 ui-monospace,Menlo,monospace;margin:10px 0}
+.agents{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.agent{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--card)}
+.agent b{font-family:Poppins,sans-serif;color:var(--accent)}
+.agent span{display:block;color:var(--muted);font-size:.9rem;margin-top:2px}
+footer{padding:40px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.disclaimer{background:var(--bg-alt);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:28px;font-size:.95rem}
+:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+@media (max-width:860px){
+  .hero-grid,.demo,.two{grid-template-columns:1fr}
+  .grid3,.ladder,.agents{grid-template-columns:1fr}
+  .flow{grid-template-columns:repeat(2,1fr)}
+  .hero svg{max-width:200px;order:-1;justify-self:start}
+  section{padding:52px 0}
+  .panel{position:static}
+  nav .hide-sm{display:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Cambio Grant Buddy home">
+      <img src="assets/mark.svg" alt="" width="52" height="52">
+      <span class="brand-text"><span class="by">Cambio Labs</span><span class="nm">Grant Buddy</span></span>
+    </a>
+    <nav>
+      <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-sm" href="#demo">Demo</a>
+      <a class="hide-sm" href="#connect">Connect</a>
+      <a class="btn primary" href="#install" style="padding:8px 16px">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">For nonprofit grant teams</div>
+      <h1>Cited grant drafts, from your own documents.</h1>
+      <p class="lead">Cambio Grant Buddy converts an RFP into a draft where every factual claim cites a source in your organization's documents. Claims without supporting evidence are flagged as gaps rather than filled in.</p>
+      <div class="cta">
+        <a class="btn primary" href="#install">Get started</a>
+        <a class="btn ghost" href="#demo">See a cited draft</a>
+      </div>
+      <div class="pill-row">
+        <span class="pill">Open source</span>
+        <span class="pill">Works with Claude and Codex</span>
+        <span class="pill">Your data stays in your folder</span>
+      </div>
+    </div>
+    <svg viewBox="0 0 1000 1000" role="img" aria-label="Cambio Grant Buddy mark: a smiling document connected to six sources">
+      <polygon points="500,130 179.6,315 179.6,685 500,870 820.4,685 820.4,315" fill="#46186F" stroke="#46186F" stroke-width="70" stroke-linejoin="round"/>
+      <g stroke="#B48CE6" stroke-width="22" stroke-linecap="round"><line x1="500" y1="500" x2="500" y2="200"/><line x1="500" y1="500" x2="240.2" y2="350"/><line x1="500" y1="500" x2="240.2" y2="650"/><line x1="500" y1="500" x2="500" y2="800"/><line x1="500" y1="500" x2="759.8" y2="650"/><line x1="500" y1="500" x2="759.8" y2="350"/></g>
+      <g fill="#B48CE6"><circle cx="500" cy="200" r="44"/><circle cx="240.2" cy="350" r="44"/><circle cx="240.2" cy="650" r="44"/><circle cx="500" cy="800" r="44"/><circle cx="759.8" cy="650" r="44"/><circle cx="759.8" cy="350" r="44"/></g>
+      <path d="M372,342 H554 L628,416 V658 H372 Z" fill="#F3EDFF" stroke="#2C0E4C" stroke-width="30" stroke-linejoin="round"/>
+      <path d="M554,342 V416 H628 Z" fill="#B48CE6" stroke="#2C0E4C" stroke-width="22" stroke-linejoin="round"/>
+      <g stroke="#B48CE6" stroke-width="20" stroke-linecap="round"><line x1="420" y1="400" x2="510" y2="400"/><line x1="420" y1="442" x2="580" y2="442"/></g>
+      <g fill="#2C0E4C"><circle cx="452" cy="520" r="19"/><circle cx="548" cy="520" r="19"/></g>
+      <path d="M446,572 Q500,624 554,572" fill="none" stroke="#2C0E4C" stroke-width="18" stroke-linecap="round"/>
+      <g fill="#8CC8EB"><circle cx="418" cy="566" r="13"/><circle cx="582" cy="566" r="13"/></g>
+    </svg>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Every claim cites a source.</h2>
+    <p class="lead">Each factual statement maps to a document in your organization. Where no document supports a claim, the tool reports a gap instead of writing an assertion.</p>
+    <div class="grid3">
+      <div class="card"><div class="num">01 SCOUT</div><h3>Find the right funders</h3><p>Scores a funder against your strategy and tiers and shows your pipeline history before classifying it as new.</p></div>
+      <div class="card"><div class="num">02 DRAFT</div><h3>RFP to cited draft</h3><p>Matches each question to your evidence and produces a coverage report for approval before any prose is written.</p></div>
+      <div class="card"><div class="num">03 EVIDENCE</div><h3>Source registry</h3><p>Records where your actual documents live, with verbatim quotes and confidence levels. It references them; it does not copy or summarize them.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Four stages, with approvals at each gate.</h2>
+    <p class="lead">The workflow runs through four stages, and you approve at each decision point before a draft is submitted.</p>
+    <div class="flow">
+      <div class="step gate"><span class="gatetag">YOU DECIDE</span><b>Go / no-go</b><span>Draft, develop in parallel, or skip. Advisory only.</span></div>
+      <div class="step"><b>RFP review</b><span>Reads the RFP: questions, limits, attachments, deadlines.</span></div>
+      <div class="step gate"><span class="gatetag">YOU DECIDE</span><b>AI-use policy</b><span>Presented before drafting. A ban restricts output to an outline.</span></div>
+      <div class="step gate"><span class="gatetag">YOU APPROVE</span><b>Coverage report</b><span>Reviewed first, then the draft with citations.</span></div>
+      <div class="step"><b>Voice match</b><span>Applies your style and register. Facts and citations are unchanged.</span></div>
+      <div class="step"><b>Final check</b><span>QA, attachment checklist, and copy-ready output by form field.</span></div>
+    </div>
+    <div class="agents">
+      <div class="agent"><b>Orchestrator</b><span>Coordinates the scout and draft stages</span></div>
+      <div class="agent"><b>Source register</b><span>Records evidence and screens for personal data</span></div>
+      <div class="agent"><b>Claim check</b><span>Flags overstatement, such as "95% completed" reported as "95% success"</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="demo">
+  <div class="wrap">
+    <h2>How a claim is cited.</h2>
+    <p class="lead">Select a source tag to see the exact quote behind a claim. Where the registry has no supporting document, the draft shows a gap notice instead.</p>
+    <div class="demo">
+      <div class="doc" aria-label="Sample draft">
+        <p class="q">Q3 · Results to date</p>
+        <p class="a">In 2025 we served 214 young people across Studio Hours and Bridge Mentors.
+          <button class="chip" data-id="a" aria-pressed="false">Annual Report · HIGH</button>
+          Studio Hours ran 312 workshops that year.
+          <button class="chip" data-id="b" aria-pressed="false">Program Outcomes · MEDIUM</button></p>
+        <p class="q">Q4 · Longitudinal outcomes</p>
+        <div class="gap"><b>EVIDENCE GAP:</b> Participant outcomes one or more years after the program. Needed from: follow-up or evaluation data. Suggested source: program staff or a past evaluation report.</div>
+      </div>
+      <aside class="panel" aria-live="polite">
+        <h3>Source</h3>
+        <div id="src">
+          <p style="color:var(--muted);margin:0">Select a tag on the left.</p>
+        </div>
+      </aside>
+    </div>
+    <p class="note">Illustrative example using Riverbend Youth Collective, a fictional organization. It ships with the tool for a five-minute test.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Capabilities and limits.</h2>
+    <div class="two">
+      <div class="card">
+        <h3>It will</h3>
+        <ul class="tick">
+          <li>Cite every factual claim to your own documents</li>
+          <li>Show confidence: HIGH, MEDIUM, LOW, or a gap</li>
+          <li>Warn when your budget figure is over 12 months old</li>
+          <li>Check the funder's AI-use policy before drafting</li>
+          <li>Screen documents for names, dates of birth and case notes</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>It won't</h3>
+        <ul class="cross">
+          <li>Invent facts, numbers or partners</li>
+          <li>Submit anything to a funder</li>
+          <li>Use a participant story without documented consent</li>
+          <li>Write to your pipeline without showing and confirming the change</li>
+          <li>Keep your data inside the tool. It stays in your folder</li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer"><b>Drafted with AI from your documents.</b> A team member must review every claim before submission.</div>
+  </div>
+</section>
+
+<section class="alt" id="connect">
+  <div class="wrap">
+    <h2>Bring your information, in any form.</h2>
+    <p class="lead">On first use it helps you connect what you already have. When a connection is unavailable, it proceeds with documents you upload.</p>
+    <div class="ladder">
+      <div class="rung"><div class="n">1</div><h3>Connect</h3><p style="color:var(--muted);margin:0">Google Drive, Notion, Sheets, Airtable, or a database. Read-only by default, verified with a non-mutating read.</p></div>
+      <div class="rung"><div class="n">2</div><h3>Point to a folder</h3><p style="color:var(--muted);margin:0">A synced or exported folder the tool can read. It records links, not copies.</p></div>
+      <div class="rung"><div class="n">3</div><h3>Upload or paste</h3><p style="color:var(--muted);margin:0">Documents and writing samples. Registered as pasted, with at most MEDIUM confidence.</p></div>
+    </div>
+    <p class="note" style="margin-top:20px">Writing samples (LOI, full application, donor email, community) inform style only. They are never treated as evidence.</p>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2>Set up in a few minutes.</h2>
+    <p class="lead">Install the plugin, then run the setup command. A short guided session creates your organization's private pack.</p>
+    <div class="tabs" role="tablist" aria-label="Install options">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="p-cc" id="t-cc">Claude Code</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-cw" id="t-cw" tabindex="-1">Cowork / claude.ai</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-cx" id="t-cx" tabindex="-1">Codex</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-ag" id="t-ag" tabindex="-1">Agensi</button>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="p-cc" aria-labelledby="t-cc">
+<pre>/plugin marketplace add &lt;github-org&gt;/grant-assistant
+/plugin install grant-assistant@cambio-labs
+/grant-setup</pre>
+      <p style="margin:0;color:var(--muted)">Replace <code>&lt;github-org&gt;</code> with the account that hosts the repository.</p>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="p-cw" aria-labelledby="t-cw" hidden>
+      <p style="margin:0">Upload the plugin or the single-skill zip, then connect the folder that holds your <code>org-pack/</code>. Connect Google Drive and Notion from your connector settings if you use them.</p>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="p-cx" aria-labelledby="t-cx" hidden>
+      <p style="margin:0 0 8px">Codex has no plugin loader for this layout. Open the repository and ask for a grant task. <code>AGENTS.md</code> tells Codex which skill file to follow.</p>
+      <p style="margin:0;color:var(--muted)">Connectors are MCP servers in your own Codex config. Cambio Grant Buddy shows you the entry to add; you make the change.</p>
+    </div>
+    <div class="tabpanel" role="tabpanel" id="p-ag" aria-labelledby="t-ag" hidden>
+      <p style="margin:0 0 8px">Download the <code>grant-assistant</code> skill, unzip it into your agent's skills folder, then ask:</p>
+<pre>Set up Cambio Grant Buddy.</pre>
+      <p style="margin:0;color:var(--muted)">Try the example: request a draft of the LOI in <code>references/example/riverbend-youth-collective/sample-rfp.md</code>.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>Created by Cambio Labs. Product lead: Edwin M. Olivera.</div>
+    <div>Code: MIT · Docs and templates: CC BY 4.0</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Source panel for the demo draft (all content is the fictional demo organization)
+  var sources={
+    a:{quote:"In 2025 we served 214 young people across Studio Hours and Bridge Mentors.",title:"2025 Annual Report",loc:"p. 4, “Our year in numbers”",conf:"HIGH",why:"Formal document, under 2 years old, verbatim."},
+    b:{quote:"Studio Hours ran 312 workshops in 2025.",title:"2025 Program Outcomes Summary",loc:"p. 2, “Studio Hours”",conf:"MEDIUM",why:"Self-reported by program staff, no outside evaluation. Cited with a caveat."}
+  };
+  var box=document.getElementById("src"), chips=document.querySelectorAll(".chip");
+  function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+  chips.forEach(function(c){
+    c.addEventListener("click",function(){
+      var s=sources[c.dataset.id];
+      chips.forEach(function(x){x.setAttribute("aria-pressed",x===c?"true":"false")});
+      box.innerHTML='<blockquote>“'+esc(s.quote)+'”</blockquote><dl><dt>Document</dt><dd>'+esc(s.title)+'</dd><dt>Location</dt><dd>'+esc(s.loc)+'</dd><dt>Confidence</dt><dd>'+esc(s.conf)+'</dd><dt>Why</dt><dd>'+esc(s.why)+'</dd></dl>';
+    });
+  });
+  // Install tabs
+  var tabs=Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  function show(t){
+    tabs.forEach(function(x){
+      var on=x===t;
+      x.setAttribute("aria-selected",on);
+      x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute("aria-controls")).hidden=!on;
+    });
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener("click",function(){show(t)});
+    t.addEventListener("keydown",function(e){
+      var n=e.key==="ArrowRight"?i+1:e.key==="ArrowLeft"?i-1:null;
+      if(n===null)return;
+      n=(n+tabs.length)%tabs.length;tabs[n].focus();show(tabs[n]);
+    });
+  });
+})();
+</script>
+</body>
+</html>
