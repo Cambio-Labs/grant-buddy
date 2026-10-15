@@ -6,8 +6,8 @@
 <title>Cambio Grant Buddy</title>
 <meta name="description" content="Cited grant drafts from your own documents. Every factual claim maps to a source in your organization's files, and unsupported claims appear as explicit gaps. Open source, for Claude and Codex.">
 <link rel="icon" type="image/svg+xml" href="assets/mark.svg">
-<!-- Plausible Analytics (cookie-free, no consent banner needed) -->
-<script defer data-domain="cambio-labs.github.io" src="https://plausible.io/js/script.js"></script>
+<!-- Umami Analytics (cookie-free, no consent banner needed) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="YOUR_UMAMI_WEBSITE_ID"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -319,9 +319,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     b:{quote:"Studio Hours ran 312 workshops in 2025.",title:"2025 Program Outcomes Summary",loc:"p. 2, “Studio Hours”",conf:"MEDIUM",why:"Self-reported by program staff, no outside evaluation. Cited with a caveat."}
   };
   var box=document.getElementById("src"), chips=document.querySelectorAll(".chip");
-  // Fire a Plausible custom event if the script is loaded; no-op otherwise.
+  // Fire an Umami custom event if the script is loaded; no-op otherwise.
   function track(event, props){
-    if(window.plausible) window.plausible(event, props?{props:props}:{});
+    if(window.umami && window.umami.track) window.umami.track(event, props||{});
   }
   function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
   chips.forEach(function(c){
